@@ -59,8 +59,12 @@ namespace OC_Express_Voitures.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Cost,Date,VehicleId")] Repair repair)
         {
+            
+
             if (ModelState.IsValid)
             {
+                var vehicle = await _context.Vehicle.FindAsync(repair.VehicleId);
+                repair.Vehicle = vehicle;
                 _context.Add(repair);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -68,11 +72,6 @@ namespace OC_Express_Voitures.Controllers
             ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Id", repair.VehicleId);
             return View(repair);
         }
-
-
-
-
-
 
         // GET: Repairs/Edit/5
         public async Task<IActionResult> Edit(int? id)

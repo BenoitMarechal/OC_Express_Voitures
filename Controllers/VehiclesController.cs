@@ -56,6 +56,9 @@ namespace OC_Express_Voitures.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Vin,Brand,Model,Finish,Year")] Vehicle vehicle)
         {
+         
+
+
             if (ModelState.IsValid)
             {
                 _context.Add(vehicle);

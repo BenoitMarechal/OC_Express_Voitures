@@ -9,7 +9,8 @@
         public string Finish { get; set; }
         public int Year { get; set; }
 
-        public ICollection<Repair>? Repairs{ get; set; }
+        //NAvigation property
+        public virtual ICollection<Repair>? Repairs{ get; set; }
 
     }
 }

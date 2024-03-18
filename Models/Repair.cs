@@ -13,7 +13,9 @@ namespace OC_Express_Voitures.Models
       
         [ForeignKey ("VehicleId")]
         public int VehicleId { get; set; }
-        public Vehicle Vehicle { get; set; }
+
+        // Navigation Property
+        public virtual Vehicle? Vehicle { get; set; }
 
     }
 }
