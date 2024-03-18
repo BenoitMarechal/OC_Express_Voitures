@@ -48,7 +48,7 @@ namespace OC_Express_Voitures.Controllers
         // GET: Repairs/Create
         public IActionResult Create()
         {
-            ViewData["VehicleId"] = new SelectList(_context.Set<Vehicle>(), "Id", "Id");
+            ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Id");
             return View();
         }
 
@@ -65,9 +65,14 @@ namespace OC_Express_Voitures.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["VehicleId"] = new SelectList(_context.Set<Vehicle>(), "Id", "Id", repair.VehicleId);
+            ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Id", repair.VehicleId);
             return View(repair);
         }
+
+
+
+
+
 
         // GET: Repairs/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -82,7 +87,7 @@ namespace OC_Express_Voitures.Controllers
             {
                 return NotFound();
             }
-            ViewData["VehicleId"] = new SelectList(_context.Set<Vehicle>(), "Id", "Id", repair.VehicleId);
+            ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Id", repair.VehicleId);
             return View(repair);
         }
 
@@ -118,7 +123,7 @@ namespace OC_Express_Voitures.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["VehicleId"] = new SelectList(_context.Set<Vehicle>(), "Id", "Id", repair.VehicleId);
+            ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Id", repair.VehicleId);
             return View(repair);
         }
 

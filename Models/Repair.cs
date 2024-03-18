@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OC_Express_Voitures.Models
 {
@@ -9,7 +10,8 @@ namespace OC_Express_Voitures.Models
         public double Cost { get; set; }
         public DateTime Date { get; set; }
 
-        [ForeignKey ("Vehicle")]
+      
+        [ForeignKey ("VehicleId")]
         public int VehicleId { get; set; }
         public Vehicle Vehicle { get; set; }
 
