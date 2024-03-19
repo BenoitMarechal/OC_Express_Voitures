@@ -18,14 +18,13 @@ namespace OC_Express_Voitures.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Repair>()
-                .HasKey(t => t.Id);
-
-            // Define relationship between Repair and Vehicle
+            // Configure one-to-many relationship between Vehicle and Repair
             modelBuilder.Entity<Repair>()
                 .HasOne(r => r.Vehicle)
-                .WithMany(v => v.Repairs)  // One Vehicle can have many Repairs
+                .WithMany(v => v!.Repairs) // Use ! to dereference nullable ICollection
                 .HasForeignKey(r => r.VehicleId);
         }
+
+
     }
 }
