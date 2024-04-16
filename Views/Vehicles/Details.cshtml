@@ -1,4 +1,4 @@
-﻿@model OC_Express_Voitures.Models.Vehicle
+﻿@model OC_Express_Voitures.Models.VehicleViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -41,11 +41,11 @@
             @Html.DisplayFor(model => model.Year)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Repairs)
+            @Html.DisplayNameFor(model => model.RepairsCount)
         </dt>
         <dd class="col-sm-10">
 
-            @Html.DisplayFor(model => model.Repairs.Count)
+            @Html.DisplayFor(model => model.RepairsCount)
         </dd>
        
     </dl>

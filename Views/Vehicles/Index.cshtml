@@ -1,4 +1,4 @@
-﻿@model IEnumerable<OC_Express_Voitures.Models.Vehicle>
+﻿@model IEnumerable<OC_Express_Voitures.Models.VehicleViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -28,7 +28,13 @@
             <th>
                 @Html.DisplayNameFor(model => model.Year)
             </th>
-            <th></th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.RepairsCount)
+            </th>
+            <th>
+                
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -50,6 +56,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Year)
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RepairsCount)
+                </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

@@ -23,15 +23,28 @@ namespace OC_Express_Voitures.Controllers
         public async Task<IActionResult> Index()
         {
             var vehicles = await _context.Vehicle
-
-        .Include(v => v.Operation)  // Load Operation data
-        .Include(v => v.Repairs)     // Load Repairs data
+        .Include(v => v.Operation)  
+        .Include(v => v.Repairs)     
         .ToListAsync();
-
             var operations = await _context.Operation.Include(v => v.Vehicle).ToListAsync();
-            
+            var vehicleViewModels = new List<VehicleViewModel>();
+            foreach(var vehicle in vehicles)
+            {
+                vehicleViewModels.Add(new VehicleViewModel()
+                {
+                    Id = vehicle.Id,
+                    Brand = vehicle.Brand,
+                    RepairsCount = vehicle.Repairs.Count(),
+                    Finish = vehicle.Finish,
+                    Model = vehicle.Model,
+                    Operation = vehicle.Operation,
+                    Vin = vehicle.Vin,
+                    Year = vehicle.Year,
 
-            return View(vehicles);
+                });
+            }
+
+            return View(vehicleViewModels);
         }
 
         // GET: Vehicles/Details/5
@@ -43,13 +56,31 @@ namespace OC_Express_Voitures.Controllers
             }
 
             var vehicle = await _context.Vehicle
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include (v => v.Operation)
+                .Include(v => v.Repairs)
+                .FirstOrDefaultAsync(m => m.Id == id)
+                
+                ;
             if (vehicle == null)
             {
                 return NotFound();
             }
+            var vehicleViewModel = new VehicleViewModel
+            {
 
-            return View(vehicle);
+                Id = vehicle.Id,
+                Brand = vehicle.Brand,
+                Finish = vehicle.Finish,
+                Model = vehicle.Model,          
+                Vin = vehicle.Vin,
+                Year = vehicle.Year,
+                RepairsCount = vehicle.Repairs.Count(),
+                Operation= vehicle.Operation,
+
+            };
+
+
+            return View(vehicleViewModel);
         }
 
         // GET: Vehicles/Create
@@ -122,6 +153,8 @@ namespace OC_Express_Voitures.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+
             return View(vehicle);
         }
 
