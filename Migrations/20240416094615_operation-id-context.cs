@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace OC_Express_Voitures.Data.Migrations
+namespace OC_Express_Voitures.Migrations
 {
     /// <inheritdoc />
-    public partial class Migration04 : Migration
+    public partial class operationidcontext : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

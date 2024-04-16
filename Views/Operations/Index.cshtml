@@ -1,4 +1,4 @@
-﻿@model IEnumerable<OC_Express_Voitures.Models.Vehicle>
+﻿@model IEnumerable<OC_Express_Voitures.Models.Operation>
 
 @{
     ViewData["Title"] = "Index";
@@ -12,21 +12,20 @@
 <table class="table">
     <thead>
         <tr>
-          
             <th>
-                @Html.DisplayNameFor(model => model.Vin)
+                @Html.DisplayNameFor(model => model.PurchasePrice)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Brand)
+                @Html.DisplayNameFor(model => model.SellingPrice)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Model)
+                @Html.DisplayNameFor(model => model.PurchaseDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Finish)
+                @Html.DisplayNameFor(model => model.SaleDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Year)
+                @Html.DisplayNameFor(model => model.Vehicle)
             </th>
             <th></th>
         </tr>
@@ -34,21 +33,20 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-           
             <td>
-                @Html.DisplayFor(modelItem => item.Vin)
+                @Html.DisplayFor(modelItem => item.PurchasePrice)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Brand)
+                @Html.DisplayFor(modelItem => item.SellingPrice)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Model)
+                @Html.DisplayFor(modelItem => item.PurchaseDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Finish)
+                @Html.DisplayFor(modelItem => item.SaleDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Year)
+                @Html.DisplayFor(modelItem => item.Vehicle.Id)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

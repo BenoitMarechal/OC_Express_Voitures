@@ -3,24 +3,21 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OC_Express_Voitures.Data;
 
 #nullable disable
 
-namespace OC_Express_Voitures.Data.Migrations
+namespace OC_Express_Voitures.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240318152933_Migration07")]
-    partial class Migration07
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -227,6 +224,37 @@ namespace OC_Express_Voitures.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("OC_Express_Voitures.Models.Operation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("PurchaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("PurchasePrice")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("SaleDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("SellingPrice")
+                        .HasColumnType("float");
+
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VehicleId")
+                        .IsUnique();
+
+                    b.ToTable("Operation");
+                });
+
             modelBuilder.Entity("OC_Express_Voitures.Models.Repair", b =>
                 {
                     b.Property<int>("Id")
@@ -274,6 +302,9 @@ namespace OC_Express_Voitures.Data.Migrations
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OperationId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Vin")
                         .IsRequired()
@@ -338,6 +369,17 @@ namespace OC_Express_Voitures.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("OC_Express_Voitures.Models.Operation", b =>
+                {
+                    b.HasOne("OC_Express_Voitures.Models.Vehicle", "Vehicle")
+                        .WithOne("Operation")
+                        .HasForeignKey("OC_Express_Voitures.Models.Operation", "VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Vehicle");
+                });
+
             modelBuilder.Entity("OC_Express_Voitures.Models.Repair", b =>
                 {
                     b.HasOne("OC_Express_Voitures.Models.Vehicle", "Vehicle")
@@ -351,6 +393,8 @@ namespace OC_Express_Voitures.Data.Migrations
 
             modelBuilder.Entity("OC_Express_Voitures.Models.Vehicle", b =>
                 {
+                    b.Navigation("Operation");
+
                     b.Navigation("Repairs");
                 });
 #pragma warning restore 612, 618

@@ -10,31 +10,23 @@ using OC_Express_Voitures.Models;
 
 namespace OC_Express_Voitures.Controllers
 {
-    public class VehiclesController : Controller
+    public class OperationsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public VehiclesController(ApplicationDbContext context)
+        public OperationsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Vehicles
+        // GET: Operations
         public async Task<IActionResult> Index()
         {
-            var vehicles = await _context.Vehicle
-
-        .Include(v => v.Operation)  // Load Operation data
-        .Include(v => v.Repairs)     // Load Repairs data
-        .ToListAsync();
-
-            var operations = await _context.Operation.Include(v => v.Vehicle).ToListAsync();
-            
-
-            return View(vehicles);
+            var applicationDbContext = _context.Operation.Include(o => o.Vehicle);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Vehicles/Details/5
+        // GET: Operations/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -42,39 +34,42 @@ namespace OC_Express_Voitures.Controllers
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicle
+            var operation = await _context.Operation
+                .Include(o => o.Vehicle)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (vehicle == null)
+            if (operation == null)
             {
                 return NotFound();
             }
 
-            return View(vehicle);
+            return View(operation);
         }
 
-        // GET: Vehicles/Create
+        // GET: Operations/Create
         public IActionResult Create()
         {
+            ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Id");
             return View();
         }
 
-        // POST: Vehicles/Create
+        // POST: Operations/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,OperationId,Vin,Brand,Model,Finish,Year")] Vehicle vehicle)
+        public async Task<IActionResult> Create([Bind("Id,VehicleId,PurchasePrice,SellingPrice,PurchaseDate,SaleDate")] Operation operation)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(vehicle);
+                _context.Add(operation);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(vehicle);
+            ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Id", operation.VehicleId);
+            return View(operation);
         }
 
-        // GET: Vehicles/Edit/5
+        // GET: Operations/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -82,22 +77,23 @@ namespace OC_Express_Voitures.Controllers
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicle.FindAsync(id);
-            if (vehicle == null)
+            var operation = await _context.Operation.FindAsync(id);
+            if (operation == null)
             {
                 return NotFound();
             }
-            return View(vehicle);
+            ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Id", operation.VehicleId);
+            return View(operation);
         }
 
-        // POST: Vehicles/Edit/5
+        // POST: Operations/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OperationId,Vin,Brand,Model,Finish,Year")] Vehicle vehicle)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,VehicleId,PurchasePrice,SellingPrice,PurchaseDate,SaleDate")] Operation operation)
         {
-            if (id != vehicle.Id)
+            if (id != operation.Id)
             {
                 return NotFound();
             }
@@ -106,12 +102,12 @@ namespace OC_Express_Voitures.Controllers
             {
                 try
                 {
-                    _context.Update(vehicle);
+                    _context.Update(operation);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VehicleExists(vehicle.Id))
+                    if (!OperationExists(operation.Id))
                     {
                         return NotFound();
                     }
@@ -122,10 +118,11 @@ namespace OC_Express_Voitures.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(vehicle);
+            ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Id", operation.VehicleId);
+            return View(operation);
         }
 
-        // GET: Vehicles/Delete/5
+        // GET: Operations/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,34 +130,35 @@ namespace OC_Express_Voitures.Controllers
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicle
+            var operation = await _context.Operation
+                .Include(o => o.Vehicle)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (vehicle == null)
+            if (operation == null)
             {
                 return NotFound();
             }
 
-            return View(vehicle);
+            return View(operation);
         }
 
-        // POST: Vehicles/Delete/5
+        // POST: Operations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var vehicle = await _context.Vehicle.FindAsync(id);
-            if (vehicle != null)
+            var operation = await _context.Operation.FindAsync(id);
+            if (operation != null)
             {
-                _context.Vehicle.Remove(vehicle);
+                _context.Operation.Remove(operation);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool VehicleExists(int id)
+        private bool OperationExists(int id)
         {
-            return _context.Vehicle.Any(e => e.Id == id);
+            return _context.Operation.Any(e => e.Id == id);
         }
     }
 }
