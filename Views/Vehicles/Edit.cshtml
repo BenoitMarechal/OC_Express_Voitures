@@ -41,9 +41,15 @@
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
-            <button asp-action="Repair/Create" class="btn btn-primary mt-2">
-                Add a repair for this vehicle
-            </button>
+
+            <form asp-action="Index" asp-controller="Repairs" method="get">
+                <input type="hidden" name="id" value="@Model?.Id" />
+                <button type="submit" class="btn btn-primary mt-2">Add a repair for this vehicle</button>
+            </form>
+
+            <button asp-action="Create" asp-controller="Repairs" method="get" class="btn btn-primary mt-2">
+                Add a repair for this vehicle V2
+            </button> 
 
         </form>
     </div>

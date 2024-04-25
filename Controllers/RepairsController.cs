@@ -19,12 +19,22 @@ namespace OC_Express_Voitures.Controllers
             _context = context;
         }
 
-        // GET: Repairs
-        public async Task<IActionResult> Index()
+        // GET: Repairs 
+        public async Task<IActionResult> Index(int? id)
         {
             var applicationDbContext = _context.Repair.Include(r => r.Vehicle);
-            return View(await applicationDbContext.ToListAsync());
+
+            if (id == null)
+            {
+                return View(await applicationDbContext.ToListAsync());
+            }
+
+            var result = await applicationDbContext.Where(r => r.VehicleId == id).ToListAsync();
+
+            return View(result);
         }
+
+
 
         // GET: Repairs/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -46,10 +56,22 @@ namespace OC_Express_Voitures.Controllers
         }
 
         // GET: Repairs/Create
-        public IActionResult Create()
+        public IActionResult Create(int? id)
         {
-            ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Id");
-            return View();
+           if (id == null)
+            {
+            //Populate the select menu with available VehicleId's'
+            ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Vin");
+                return View();
+            }
+
+           else
+           {   // Disable the select menu and preselect the correct VehicleId
+            ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Vin", id);
+            ViewData["Disabled"] = "disabled";
+                return View();
+           }
+
         }
 
         // POST: Repairs/Create

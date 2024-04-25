@@ -51,6 +51,11 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
+
+    <form asp-action="Index" asp-controller="Repairs" method="get">
+        <input type="hidden" name="id" value="@Model?.Id" />
+        <button type="submit" class="btn btn-primary mt-2">See all repairs</button>
+    </form>
     <a asp-action="Index">Back to List</a>
 </div>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.Identity.Client;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OC_Express_Voitures.Models
 {
@@ -11,9 +12,8 @@ namespace OC_Express_Voitures.Models
         public string Finish { get; set; }
         public int Year { get; set; }
 
-        //Navigation properties
-       //public  ICollection<Repair>? Repairs{ get; set; }
-       // [ForeignKey(nameof(OperationId))]
+        public double RetailPrice { get; set; }
+
         public int RepairsCount { get; set; }
         public virtual required Operation? Operation { get; set; }
 

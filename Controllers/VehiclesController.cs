@@ -13,6 +13,7 @@ namespace OC_Express_Voitures.Controllers
     public class VehiclesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private const double FixMargin = 500;
 
         public VehiclesController(ApplicationDbContext context)
         {
@@ -40,11 +41,27 @@ namespace OC_Express_Voitures.Controllers
                     Operation = vehicle.Operation,
                     Vin = vehicle.Vin,
                     Year = vehicle.Year,
+                    RetailPrice=CalulateRetailPrice(vehicle.Operation, vehicle.Repairs.ToList())
 
                 });
+                
             }
 
             return View(vehicleViewModels);
+        }
+
+        private double CalulateRetailPrice(Operation operation, List <Repair >repairs)
+        {
+            double price = 0;
+            foreach(Repair repair in repairs)
+            {
+                price += repair.Cost;
+            }
+
+            price += operation.PurchasePrice;
+            price += FixMargin;
+            return price;          
+
         }
 
         // GET: Vehicles/Details/5
