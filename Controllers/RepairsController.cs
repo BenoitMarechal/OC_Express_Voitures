@@ -56,7 +56,7 @@ namespace OC_Express_Voitures.Controllers
         }
 
         // GET: Repairs/Create
-        public IActionResult Create(int? id)
+        public async Task<IActionResult> Create(int? id)
         {
            if (id == null)
             {
@@ -65,12 +65,18 @@ namespace OC_Express_Voitures.Controllers
                 return View();
             }
 
-           else
-           {   // Disable the select menu and preselect the correct VehicleId
+
+            // Disable the select menu and preselect the correct VehicleId
+            var vehicle = await _context.Vehicle.FindAsync(id);
+            if (vehicle == null)
+                {
+                return NotFound($"Vehicle with ID {id} not found.");
+            }
+
             ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Vin", id);
             ViewData["Disabled"] = "disabled";
-                return View();
-           }
+             return View();
+           
 
         }
 
