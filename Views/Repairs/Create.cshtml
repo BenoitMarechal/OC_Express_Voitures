@@ -28,9 +28,10 @@
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="VehicleId" class="control-label">Vin</label>
-                <select asp-for="VehicleId" class="form-control" asp-items="ViewBag.VehicleId"  disabled=@ViewData["Disabled"]></select>
+            <div class="form-group" hidden=@ViewData["Disabled"]>
+                <label asp-for="VehicleId" class="control-label">Vin</label>                 
+                <select asp-for="VehicleId" class="form-control" asp-items="ViewBag.VehicleId" ></select>
+                @* <input type="hidden" asp-for="VehicleId" /> *@
             </div>
 
 
