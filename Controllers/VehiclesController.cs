@@ -102,15 +102,29 @@ namespace OC_Express_Voitures.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,OperationId,Vin,Brand,Model,Finish,Year")] Vehicle vehicle)
+        public async Task<IActionResult> Create([Bind("Id,OperationId,Vin,Brand,Model,Finish,Year, PurchasePrice, PurchaseDate")] VehicleOperationViewModel vehicleOperationViewModel)
         {
             if (ModelState.IsValid)
             {
-                var operation= new Operation();
-                operation.VehicleId = vehicle.Id;
-                operation.Vehicle=vehicle;               
-                operation.PurchasePrice = 0;
-                operation.SellingPrice = 0;
+                var operation= new Operation{
+                    VehicleId=vehicleOperationViewModel.Id,
+                    PurchaseDate=vehicleOperationViewModel.PurchaseDate,
+                    PurchasePrice=vehicleOperationViewModel.PurchasePrice,
+                };
+                var vehicle = new Vehicle{
+                Id = vehicleOperationViewModel.Id,
+                Brand=vehicleOperationViewModel.Brand,
+                Finish=vehicleOperationViewModel.Finish,
+                Model = vehicleOperationViewModel.Model,
+                Operation = operation,
+                Vin=vehicleOperationViewModel.Vin,
+                Year=vehicleOperationViewModel.Year,
+                };
+
+                //operation.VehicleId = vehicle.Id;
+                //operation.Vehicle=vehicle;               
+                //operation.PurchasePrice = 0;
+                //operation.SellingPrice = 0;
                 _context.Add(vehicle);
                 _context.Add(operation);
                 await _context.SaveChangesAsync();
@@ -118,7 +132,7 @@ namespace OC_Express_Voitures.Controllers
             }
 
 
-            return View(vehicle);
+            return View(vehicleOperationViewModel);
         }
 
 

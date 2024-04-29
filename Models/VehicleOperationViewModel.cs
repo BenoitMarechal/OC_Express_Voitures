@@ -7,7 +7,7 @@ namespace OC_Express_Voitures.Models
 
         //  public class Vehicle
         //  {
-       // public int Id { get; set; }
+        public int Id { get; set; }
         public string Vin { get; set; }
         public string Brand { get; set; }
         public string Model { get; set; }
@@ -24,13 +24,13 @@ namespace OC_Express_Voitures.Models
         // {
         //   public int Id { get; set; }
 
-        public int VehicleId { get; set; }
+       // public int VehicleId { get; set; }
 
         public double PurchasePrice { get; set; }
-        public double SellingPrice { get; set; }
+       // public double SellingPrice { get; set; }
 
         public DateTime PurchaseDate { get; set; }
-        public DateTime SaleDate { get; set; }
+       // public DateTime SaleDate { get; set; }
 
         // Navigation Property
         //   [ForeignKey(nameof(VehicleId))]
