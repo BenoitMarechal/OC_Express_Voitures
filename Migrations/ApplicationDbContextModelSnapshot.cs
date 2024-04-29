@@ -252,7 +252,7 @@ namespace OC_Express_Voitures.Migrations
                     b.HasIndex("VehicleId")
                         .IsUnique();
 
-                    b.ToTable("Operation");
+                    b.ToTable("Operation", (string)null);
                 });
 
             modelBuilder.Entity("OC_Express_Voitures.Models.Repair", b =>
@@ -280,7 +280,7 @@ namespace OC_Express_Voitures.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("Repair");
+                    b.ToTable("Repair", (string)null);
                 });
 
             modelBuilder.Entity("OC_Express_Voitures.Models.Vehicle", b =>
@@ -312,7 +312,7 @@ namespace OC_Express_Voitures.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Vehicle");
+                    b.ToTable("Vehicle", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -42,11 +42,8 @@ namespace OC_Express_Voitures.Controllers
                     Vin = vehicle.Vin,
                     Year = vehicle.Year,
                     RetailPrice=CalulateRetailPrice(vehicle.Operation, vehicle.Repairs.ToList())
-
-                });
-                
+                });                
             }
-
             return View(vehicleViewModels);
         }
 
@@ -57,11 +54,9 @@ namespace OC_Express_Voitures.Controllers
             {
                 price += repair.Cost;
             }
-
             price += operation.PurchasePrice;
             price += FixMargin;
-            return price;          
-
+            return price;        
         }
 
         // GET: Vehicles/Details/5
@@ -76,7 +71,6 @@ namespace OC_Express_Voitures.Controllers
                 .Include (v => v.Operation)
                 .Include(v => v.Repairs)
                 .FirstOrDefaultAsync(m => m.Id == id)
-                
                 ;
             if (vehicle == null)
             {
@@ -84,7 +78,6 @@ namespace OC_Express_Voitures.Controllers
             }
             var vehicleViewModel = new VehicleViewModel
             {
-
                 Id = vehicle.Id,
                 Brand = vehicle.Brand,
                 Finish = vehicle.Finish,
@@ -93,9 +86,7 @@ namespace OC_Express_Voitures.Controllers
                 Year = vehicle.Year,
                 RepairsCount = vehicle.Repairs.Count(),
                 Operation= vehicle.Operation,
-
             };
-
 
             return View(vehicleViewModel);
         }
@@ -115,12 +106,22 @@ namespace OC_Express_Voitures.Controllers
         {
             if (ModelState.IsValid)
             {
+                var operation= new Operation();
+                operation.VehicleId = vehicle.Id;
+                operation.Vehicle=vehicle;               
+                operation.PurchasePrice = 0;
+                operation.SellingPrice = 0;
                 _context.Add(vehicle);
+                _context.Add(operation);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+
             return View(vehicle);
         }
+
+
 
         // GET: Vehicles/Edit/5
         public async Task<IActionResult> Edit(int? id)
