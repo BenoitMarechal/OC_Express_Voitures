@@ -27,16 +27,15 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Year)
-            </th>
-
-            <th>
-                @Html.DisplayNameFor(model => model.RepairsCount)
-            </th>
+            </th>            
             <th>
                 @Html.DisplayNameFor(model => model.RetailPrice)
             </th>
             <th>
-
+                @* Buttons *@
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsAvailable)
             </th>
         </tr>
     </thead>
@@ -59,10 +58,7 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Year)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RepairsCount)
-                </td>
+                </td>             
                 <td>
                     @Html.DisplayFor(modelItem => item.RetailPrice)
                 </td>
@@ -71,6 +67,10 @@
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsAvailable)
+                </td>
+
             </tr>
         }
     </tbody>

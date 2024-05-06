@@ -10,9 +10,11 @@ namespace OC_Express_Voitures.Models
         
         public double PurchasePrice { get; set; }
         public double SellingPrice { get; set; }
+        public bool isAvailable { get; set; }
 
         public DateTime PurchaseDate { get; set; }
-        public DateTime SaleDate { get; set; }
+        public DateTime? SaleDate { get; set; }
+        
 
         // Navigation Property
         [ForeignKey(nameof(VehicleId))]

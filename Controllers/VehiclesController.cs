@@ -24,6 +24,7 @@ namespace OC_Express_Voitures.Controllers
         public async Task<IActionResult> Index()
         {
             var vehicles = await _context.Vehicle
+
         .Include(v => v.Operation)  
         .Include(v => v.Repairs)     
         .ToListAsync();
@@ -34,14 +35,16 @@ namespace OC_Express_Voitures.Controllers
                 vehicleViewModels.Add(new VehicleViewModel()
                 {
                     Id = vehicle.Id,
-                    Brand = vehicle.Brand,
-                    RepairsCount = vehicle.Repairs.Count(),
+                    Brand = vehicle.Brand,              
                     Finish = vehicle.Finish,
                     Model = vehicle.Model,
                     Operation = vehicle.Operation,
                     Vin = vehicle.Vin,
                     Year = vehicle.Year,
-                    RetailPrice=CalulateRetailPrice(vehicle.Operation, vehicle.Repairs.ToList())
+                    RetailPrice=CalulateRetailPrice(vehicle.Operation, vehicle.Repairs.ToList()),
+                    IsAvailable=true,
+                    
+
                 });                
             }
             return View(vehicleViewModels);
@@ -57,6 +60,13 @@ namespace OC_Express_Voitures.Controllers
             price += operation.PurchasePrice;
             price += FixMargin;
             return price;        
+        }
+
+        private bool ToggleAccessibility(Operation operation)
+        {
+            if(operation.SaleDate != null) return false;
+            return !operation.isAvailable;
+
         }
 
         // GET: Vehicles/Details/5
@@ -83,8 +93,7 @@ namespace OC_Express_Voitures.Controllers
                 Finish = vehicle.Finish,
                 Model = vehicle.Model,          
                 Vin = vehicle.Vin,
-                Year = vehicle.Year,
-                RepairsCount = vehicle.Repairs.Count(),
+                Year = vehicle.Year,               
                 Operation= vehicle.Operation,
             };
 
@@ -119,12 +128,7 @@ namespace OC_Express_Voitures.Controllers
                 Operation = operation,
                 Vin=vehicleOperationViewModel.Vin,
                 Year=vehicleOperationViewModel.Year,
-                };
-
-                //operation.VehicleId = vehicle.Id;
-                //operation.Vehicle=vehicle;               
-                //operation.PurchasePrice = 0;
-                //operation.SellingPrice = 0;
+                };                
                 _context.Add(vehicle);
                 _context.Add(operation);
                 await _context.SaveChangesAsync();
@@ -150,7 +154,22 @@ namespace OC_Express_Voitures.Controllers
             {
                 return NotFound();
             }
-            return View(vehicle);
+
+            //Create viewModel
+            var vehicleOperationViewModel = new VehicleViewModel
+            {
+                Id = vehicle.Id,
+                Brand = vehicle.Brand,
+                Finish = vehicle.Finish,
+                Model = vehicle.Model,
+                Vin = vehicle.Vin,
+                Year = vehicle.Year,
+                Operation=vehicle.Operation,
+            };
+
+
+
+            return View(vehicleOperationViewModel);
         }
 
         // POST: Vehicles/Edit/5
