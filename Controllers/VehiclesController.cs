@@ -35,15 +35,14 @@ namespace OC_Express_Voitures.Controllers
                 vehicleViewModels.Add(new VehicleViewModel()
                 {
                     Id = vehicle.Id,
-                    Brand = vehicle.Brand,              
+                    Brand = vehicle.Brand,
                     Finish = vehicle.Finish,
                     Model = vehicle.Model,
                     Operation = vehicle.Operation,
                     Vin = vehicle.Vin,
                     Year = vehicle.Year,
                     RetailPrice=CalulateRetailPrice(vehicle.Operation, vehicle.Repairs.ToList()),
-                    IsAvailable=true,
-                    
+                    IsAvailable=vehicle.Operation.SaleDate!=null,
 
                 });                
             }
@@ -65,7 +64,7 @@ namespace OC_Express_Voitures.Controllers
         private bool ToggleAccessibility(Operation operation)
         {
             if(operation.SaleDate != null) return false;
-            return !operation.isAvailable;
+            return !operation.IsAvailable;
 
         }
 
@@ -86,18 +85,18 @@ namespace OC_Express_Voitures.Controllers
             {
                 return NotFound();
             }
-            var vehicleViewModel = new VehicleViewModel
-            {
-                Id = vehicle.Id,
-                Brand = vehicle.Brand,
-                Finish = vehicle.Finish,
-                Model = vehicle.Model,          
-                Vin = vehicle.Vin,
-                Year = vehicle.Year,               
-                Operation= vehicle.Operation,
-            };
+            //var vehicleViewModel = new VehicleViewModel
+            //{
+            //    Id = vehicle.Id,
+            //    Brand = vehicle.Brand,
+            //    Finish = vehicle.Finish,
+            //    Model = vehicle.Model,          
+            //    Vin = vehicle.Vin,
+            //    Year = vehicle.Year,               
+            //    Operation= vehicle.Operation,
+            //};
 
-            return View(vehicleViewModel);
+            return View(vehicle);
         }
 
         // GET: Vehicles/Create
@@ -128,13 +127,12 @@ namespace OC_Express_Voitures.Controllers
                 Operation = operation,
                 Vin=vehicleOperationViewModel.Vin,
                 Year=vehicleOperationViewModel.Year,
-                };                
-                _context.Add(vehicle);
-                _context.Add(operation);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                };                 
+            _context.Add(vehicle);
+            _context.Add(operation);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
             }
-
 
             return View(vehicleOperationViewModel);
         }
@@ -149,7 +147,17 @@ namespace OC_Express_Voitures.Controllers
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicle.FindAsync(id);
+           // var vehicle = await _context.Vehicle.FindAsync(id);
+
+
+            var vehicle = await _context.Vehicle
+             .Include(v => v.Operation)
+             .Include(v => v.Repairs)
+             .FirstOrDefaultAsync(m => m.Id == id)
+             ;
+
+
+
             if (vehicle == null)
             {
                 return NotFound();
@@ -164,7 +172,7 @@ namespace OC_Express_Voitures.Controllers
                 Model = vehicle.Model,
                 Vin = vehicle.Vin,
                 Year = vehicle.Year,
-                Operation=vehicle.Operation,
+                Operation=vehicle.Operation,                
             };
 
 
@@ -177,7 +185,7 @@ namespace OC_Express_Voitures.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OperationId,Vin,Brand,Model,Finish,Year")] Vehicle vehicle)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Vin,Brand,Model,Finish,Year, Operation")] Vehicle vehicle)
         {
             if (id != vehicle.Id)
             {
@@ -186,9 +194,24 @@ namespace OC_Express_Voitures.Controllers
 
             if (ModelState.IsValid)
             {
+                var targetVehicle = await _context.Vehicle
+            .Include(v => v.Operation)
+            .Include(v => v.Repairs)
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+                targetVehicle.Vin= vehicle.Vin;
+                targetVehicle.Year= vehicle.Year;
+                targetVehicle.Operation= vehicle.Operation;
+                targetVehicle.Brand= vehicle.Brand;
+                targetVehicle.Finish= vehicle.Finish;   
+                targetVehicle.Model= vehicle.Model;
+
+            
+
+
                 try
                 {
-                    _context.Update(vehicle);
+                    _context.Update(targetVehicle);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

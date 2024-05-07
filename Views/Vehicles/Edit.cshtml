@@ -44,6 +44,12 @@
                 <span asp-validation-for="Operation.SaleDate" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Operation.IsAvailable" class="control-label"></label>
+                <input asp-for="Operation.IsAvailable" class="form-control" />
+                <span asp-validation-for="Operation.IsAvailable" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>           
 

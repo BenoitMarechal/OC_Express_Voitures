@@ -10,10 +10,8 @@ namespace OC_Express_Voitures.Models
         public string Model { get; set; }
         public string Finish { get; set; }
         public int Year { get; set; }
-
-        //Navigation properties
-       public  ICollection<Repair>? Repairs{ get; set; }
-       // [ForeignKey(nameof(OperationId))]
+   
+       public  ICollection<Repair>? Repairs{ get; set; }       
         public virtual required Operation? Operation { get; set; }
 
     }

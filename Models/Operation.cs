@@ -10,7 +10,7 @@ namespace OC_Express_Voitures.Models
         
         public double PurchasePrice { get; set; }
         public double SellingPrice { get; set; }
-        public bool isAvailable { get; set; }
+        public bool IsAvailable { get; set; }
 
         public DateTime PurchaseDate { get; set; }
         public DateTime? SaleDate { get; set; }
