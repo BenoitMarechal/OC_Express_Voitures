@@ -46,12 +46,13 @@
                 @Html.DisplayFor(modelItem => item.SaleDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Vehicle.Id)
+                @Html.DisplayFor(modelItem => item.Vehicle.Vin)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                <a asp-controller="Vehicles" asp-action="Details" asp-route-id="@item.Vehicle.Id">See Vehicle</a>
             </td>
         </tr>
 }

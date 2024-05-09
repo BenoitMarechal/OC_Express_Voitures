@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using OC_Express_Voitures.Migrations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OC_Express_Voitures.Models
 {
@@ -12,13 +13,28 @@ namespace OC_Express_Voitures.Models
         public double SellingPrice { get; set; }
         public bool IsAvailable { get; set; }
 
-        public DateTime PurchaseDate { get; set; }
-        public DateTime? SaleDate { get; set; }
+        public DateOnly PurchaseDate { get; set; }
+        public DateOnly? SaleDate { get; set; }
         
 
         // Navigation Property
         [ForeignKey(nameof(VehicleId))]
-        public virtual Vehicle? Vehicle { get; set; }
+        public virtual Vehicle Vehicle { get; set; }
+
+        public string ReturnStatus()
+        {
+            if(SaleDate != null)
+            {
+                IsAvailable = false;
+                return "Vendu";
+            }
+            if (IsAvailable == false)
+            {
+                return "Bientôt diponible";
+            }
+
+            return "Disponible";
+        }
 
 
 

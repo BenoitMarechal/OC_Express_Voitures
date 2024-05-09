@@ -29,24 +29,24 @@ namespace OC_Express_Voitures.Controllers
         .Include(v => v.Repairs)     
         .ToListAsync();
             var operations = await _context.Operation.Include(v => v.Vehicle).ToListAsync();
-            var vehicleViewModels = new List<VehicleViewModel>();
+            var vehicleIndexViewModels = new List<VehicleIndexViewModel>();
             foreach(var vehicle in vehicles)
             {
-                vehicleViewModels.Add(new VehicleViewModel()
+                vehicleIndexViewModels.Add(new VehicleIndexViewModel()
                 {
                     Id = vehicle.Id,
-                    Brand = vehicle.Brand,
-                    Finish = vehicle.Finish,
-                    Model = vehicle.Model,
-                    Operation = vehicle.Operation,
                     Vin = vehicle.Vin,
+                    Brand = vehicle.Brand,
+                    Model = vehicle.Model,
+                    Finish = vehicle.Finish,
                     Year = vehicle.Year,
-                    RetailPrice=CalulateRetailPrice(vehicle.Operation, vehicle.Repairs.ToList()),
-                    IsAvailable=vehicle.Operation.SaleDate!=null,
+                    RetailPrice = CalulateRetailPrice(vehicle.Operation, vehicle.Repairs.ToList()),
+                    IsAvailable = vehicle.Operation.SaleDate == null,
+                    Status = vehicle.Operation.ReturnStatus()
 
                 });                
             }
-            return View(vehicleViewModels);
+            return View(vehicleIndexViewModels);
         }
 
         private double CalulateRetailPrice(Operation operation, List <Repair >repairs)
@@ -61,9 +61,11 @@ namespace OC_Express_Voitures.Controllers
             return price;        
         }
 
+        // AssessAvailability (bool isAvailable, date|null saledate)
         private bool ToggleAccessibility(Operation operation)
         {
             if(operation.SaleDate != null) return false;
+
             return !operation.IsAvailable;
 
         }
@@ -85,18 +87,20 @@ namespace OC_Express_Voitures.Controllers
             {
                 return NotFound();
             }
-            //var vehicleViewModel = new VehicleViewModel
-            //{
-            //    Id = vehicle.Id,
-            //    Brand = vehicle.Brand,
-            //    Finish = vehicle.Finish,
-            //    Model = vehicle.Model,          
-            //    Vin = vehicle.Vin,
-            //    Year = vehicle.Year,               
-            //    Operation= vehicle.Operation,
-            //};
+            var vehicleDetailsViewModel = new VehicleDetailsViewModel
+            {
+                Id = vehicle.Id,
+                Vin = vehicle.Vin,
+                Brand = vehicle.Brand,
+                Model = vehicle.Model,          
+                Finish = vehicle.Finish,
+                Year = vehicle.Year,               
+                RepairsCount=vehicle.Repairs.Count(),
+                RetailPrice = CalulateRetailPrice(vehicle.Operation, vehicle.Repairs.ToList()),
+                IsAvailable = vehicle.Operation.SaleDate == null,
+            };
 
-            return View(vehicle);
+            return View(vehicleDetailsViewModel);
         }
 
         // GET: Vehicles/Create
@@ -105,28 +109,31 @@ namespace OC_Express_Voitures.Controllers
             return View();
         }
 
+        // test get create
+
+        
         // POST: Vehicles/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,OperationId,Vin,Brand,Model,Finish,Year, PurchasePrice, PurchaseDate")] VehicleOperationViewModel vehicleOperationViewModel)
+        public async Task<IActionResult> Create([Bind("Id,OperationId,Vin,Brand,Model,Finish,Year, PurchasePrice, PurchaseDate")] VehicleCreateViewModel vehicleCreateViewModel)
         {
             if (ModelState.IsValid)
             {
                 var operation= new Operation{
-                    VehicleId=vehicleOperationViewModel.Id,
-                    PurchaseDate=vehicleOperationViewModel.PurchaseDate,
-                    PurchasePrice=vehicleOperationViewModel.PurchasePrice,
+                    VehicleId=vehicleCreateViewModel.Id,
+                    PurchaseDate=vehicleCreateViewModel.PurchaseDate,
+                    PurchasePrice=vehicleCreateViewModel.PurchasePrice,
                 };
                 var vehicle = new Vehicle{
-                Id = vehicleOperationViewModel.Id,
-                Brand=vehicleOperationViewModel.Brand,
-                Finish=vehicleOperationViewModel.Finish,
-                Model = vehicleOperationViewModel.Model,
+                Id = vehicleCreateViewModel.Id,
+                Brand=vehicleCreateViewModel.Brand,
+                Finish=vehicleCreateViewModel.Finish,
+                Model = vehicleCreateViewModel.Model,
                 Operation = operation,
-                Vin=vehicleOperationViewModel.Vin,
-                Year=vehicleOperationViewModel.Year,
+                Vin=vehicleCreateViewModel.Vin,
+                Year=vehicleCreateViewModel.Year,
                 };                 
             _context.Add(vehicle);
             _context.Add(operation);
@@ -134,7 +141,7 @@ namespace OC_Express_Voitures.Controllers
             return RedirectToAction(nameof(Index));
             }
 
-            return View(vehicleOperationViewModel);
+            return View(vehicleCreateViewModel);
         }
 
 
@@ -145,9 +152,7 @@ namespace OC_Express_Voitures.Controllers
             if (id == null)
             {
                 return NotFound();
-            }
-
-           // var vehicle = await _context.Vehicle.FindAsync(id);
+            }        
 
 
             var vehicle = await _context.Vehicle
@@ -156,28 +161,28 @@ namespace OC_Express_Voitures.Controllers
              .FirstOrDefaultAsync(m => m.Id == id)
              ;
 
-
-
             if (vehicle == null)
             {
                 return NotFound();
             }
 
             //Create viewModel
-            var vehicleOperationViewModel = new VehicleViewModel
+            var vehicleEditViewModel = new VehicleEditViewModel
             {
                 Id = vehicle.Id,
-                Brand = vehicle.Brand,
-                Finish = vehicle.Finish,
-                Model = vehicle.Model,
                 Vin = vehicle.Vin,
+                Brand = vehicle.Brand,
+                Model = vehicle.Model,
+                Finish = vehicle.Finish,
                 Year = vehicle.Year,
-                Operation=vehicle.Operation,                
+                SaleDate= vehicle.Operation.SaleDate,
+                IsAvailable = vehicle.Operation.SaleDate != null ? false : vehicle.Operation.IsAvailable
+            //IsAvailable = vehicle.Operation.SaleDate == null,
             };
 
 
 
-            return View(vehicleOperationViewModel);
+            return View(vehicleEditViewModel);
         }
 
         // POST: Vehicles/Edit/5
@@ -185,30 +190,29 @@ namespace OC_Express_Voitures.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Vin,Brand,Model,Finish,Year, Operation")] Vehicle vehicle)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Vin,Brand,Model,Finish,Year, SaleDate, IsAvailable")] VehicleEditViewModel vehicleEditViewModel)
         {
-            if (id != vehicle.Id)
+            if (id != vehicleEditViewModel.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                var targetVehicle = await _context.Vehicle
+
+               var targetVehicle = await _context.Vehicle
             .Include(v => v.Operation)
             .Include(v => v.Repairs)
             .FirstOrDefaultAsync(m => m.Id == id);
 
-                targetVehicle.Vin= vehicle.Vin;
-                targetVehicle.Year= vehicle.Year;
-                targetVehicle.Operation= vehicle.Operation;
-                targetVehicle.Brand= vehicle.Brand;
-                targetVehicle.Finish= vehicle.Finish;   
-                targetVehicle.Model= vehicle.Model;
-
-            
-
-
+                targetVehicle.Vin= vehicleEditViewModel.Vin;
+                targetVehicle.Brand= vehicleEditViewModel.Brand;                
+                targetVehicle.Model= vehicleEditViewModel.Model;           
+                targetVehicle.Finish= vehicleEditViewModel.Finish;   
+                targetVehicle.Year= vehicleEditViewModel.Year;
+                targetVehicle.Operation.SaleDate=vehicleEditViewModel.SaleDate;
+                targetVehicle.Operation.IsAvailable= vehicleEditViewModel.SaleDate != null?false:vehicleEditViewModel.IsAvailable;
+               // targetVehicle.Operation.IsAvailable = vehicleEditViewModel.IsAvailable;
                 try
                 {
                     _context.Update(targetVehicle);
@@ -216,7 +220,7 @@ namespace OC_Express_Voitures.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VehicleExists(vehicle.Id))
+                    if (!VehicleExists(vehicleEditViewModel.Id))
                     {
                         return NotFound();
                     }
@@ -229,7 +233,7 @@ namespace OC_Express_Voitures.Controllers
             }
 
 
-            return View(vehicle);
+            return View(vehicleEditViewModel);
         }
 
         // GET: Vehicles/Delete/5

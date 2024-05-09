@@ -11,7 +11,7 @@ namespace OC_Express_Voitures.Models
         public string Title { get; set; }  
         public double Cost { get; set; }
         
-        public DateTime Date { get; set; }
+        public DateOnly Date { get; set; }
               
 
         // Navigation Property

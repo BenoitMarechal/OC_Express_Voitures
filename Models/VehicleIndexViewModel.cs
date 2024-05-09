@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OC_Express_Voitures.Models
 {
-    public class VehicleViewModel
+    public class VehicleIndexViewModel
     {     
         public int Id { get; set; }       
         public string Vin   { get; set; }
@@ -11,12 +11,9 @@ namespace OC_Express_Voitures.Models
         public string Model { get; set; }
         public string Finish { get; set; }
         public int Year { get; set; }    
-
         public bool IsAvailable { get; set; }
-
         public double RetailPrice { get; set; }
-     
-        public virtual required Operation? Operation { get; set; }
+        public string Status {  get; set; }
 
     }
 }

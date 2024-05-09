@@ -12,7 +12,7 @@ namespace OC_Express_Voitures.Models
         public int Year { get; set; }
    
        public  ICollection<Repair>? Repairs{ get; set; }       
-        public virtual required Operation? Operation { get; set; }
+       public virtual required Operation Operation { get; set; }
 
     }
 }

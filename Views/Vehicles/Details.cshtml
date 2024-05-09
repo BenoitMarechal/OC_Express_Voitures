@@ -1,4 +1,4 @@
-﻿@model OC_Express_Voitures.Models.Vehicle
+﻿@model OC_Express_Voitures.Models.VehicleDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -42,10 +42,22 @@
         </dd> 
         @* //////////////////// *@
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Repairs)
+            @Html.DisplayNameFor(model => model.RepairsCount)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Repairs.Count)
+            @Html.DisplayFor(model => model.RepairsCount)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RetailPrice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RetailPrice)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IsAvailable)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IsAvailable)
         </dd>
     </dl>
 </div>
