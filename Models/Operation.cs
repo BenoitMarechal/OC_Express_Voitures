@@ -30,10 +30,10 @@ namespace OC_Express_Voitures.Models
             }
             if (IsAvailable == false)
             {
-                return "Bientôt diponible";
+                return "Bientôt disponible";
             }
 
-            return "Disponible";
+            return "En stock";
         }
 
 

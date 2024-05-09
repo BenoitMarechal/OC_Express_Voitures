@@ -41,7 +41,7 @@ namespace OC_Express_Voitures.Controllers
                     Finish = vehicle.Finish,
                     Year = vehicle.Year,
                     RetailPrice = CalulateRetailPrice(vehicle.Operation, vehicle.Repairs.ToList()),
-                    IsAvailable = vehicle.Operation.SaleDate == null,
+                    IsAvailable = vehicle.Operation.IsAvailable,
                     Status = vehicle.Operation.ReturnStatus()
 
                 });                
@@ -97,7 +97,7 @@ namespace OC_Express_Voitures.Controllers
                 Year = vehicle.Year,               
                 RepairsCount=vehicle.Repairs.Count(),
                 RetailPrice = CalulateRetailPrice(vehicle.Operation, vehicle.Repairs.ToList()),
-                IsAvailable = vehicle.Operation.SaleDate == null,
+                IsAvailable = vehicle.Operation.IsAvailable,
             };
 
             return View(vehicleDetailsViewModel);
