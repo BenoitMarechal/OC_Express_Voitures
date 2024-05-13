@@ -42,56 +42,55 @@
         </tr>
     </thead>
     <tbody>
+
         @foreach (var item in Model)
-        {          
-            @{
-                string statusClass = "bg-gradient text-light bg-";              
-                
+        {            
+            string statusClass = "bg-gradient text-light bg-";  
 
-
-    switch (item.Status)
-    {
-        case "Vendu":
+                switch (item.Status)
+                {
+                    case "Vendu":
                         statusClass = statusClass + "secondary";
-            break;
-        case "Bientôt disponible":
-                        statusClass = statusClass + "primary";
-            break;
-        default:
-                        statusClass = statusClass + "dark text-bold";
-            // Default case
-            break;
-    }
-}
+                    break;
 
-<tr class="@statusClass">
-                <td>
-                    @Html.DisplayFor(modelItem => item.Vin)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Brand)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Model)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Finish)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Year)
-                </td>             
-                <td>
-                    @Html.DisplayFor(modelItem => item.RetailPrice)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td >
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="@statusClass">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id" class="@statusClass">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="@statusClass">Delete</a>
-                </td>               
-            </tr>
+                    case "Bientôt disponible":
+                        statusClass = statusClass + "primary";
+                    break;
+
+                    default:
+                         statusClass = statusClass + "dark text-bold";
+                        break;
+                }
+            
+
+                <tr class="@statusClass">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Vin)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Brand)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Model)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Finish)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Year)
+                    </td>             
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RetailPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td >
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="@statusClass">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id" class="@statusClass">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="@statusClass">Delete</a>
+                    </td>               
+                </tr>
         }
     </tbody>
 </table>

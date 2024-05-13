@@ -106,11 +106,17 @@ namespace OC_Express_Voitures.Controllers
         // GET: Vehicles/Create
         public IActionResult Create()
         {
+            var currentYear = DateTime.Now.Year;
+            var minYear = 1990;
+            var allowedYears = new List<int?>();
+            allowedYears.Add(null);
+            for (int year = currentYear; year >= minYear; year--)
+            {
+                allowedYears.Add(year);
+            }
+            ViewData["Years"] = new SelectList(allowedYears);
             return View();
         }
-
-        // test get create
-
         
         // POST: Vehicles/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -119,6 +125,10 @@ namespace OC_Express_Voitures.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,OperationId,Vin,Brand,Model,Finish,Year, PurchasePrice, PurchaseDate")] VehicleCreateViewModel vehicleCreateViewModel)
         {
+            if(vehicleCreateViewModel.Year  < 1990)
+            {
+                ModelState.AddModelError(nameof(vehicleCreateViewModel.Year), "Cars before 1990 will not be accepted");
+            }
             if (ModelState.IsValid)
             {
                 var operation= new Operation{
