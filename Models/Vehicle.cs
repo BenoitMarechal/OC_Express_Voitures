@@ -10,8 +10,9 @@ namespace OC_Express_Voitures.Models
         public string Model { get; set; }
         public string Finish { get; set; }
         public int Year { get; set; }
-   
-       public  ICollection<Repair>? Repairs{ get; set; }       
+        public string? Description{ get; set; }
+
+        public  ICollection<Repair>? Repairs{ get; set; }       
        public virtual required Operation Operation { get; set; }
 
     }

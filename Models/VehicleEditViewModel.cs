@@ -13,7 +13,8 @@ namespace OC_Express_Voitures.Models
         public int Year { get; set; }
 
         public DateOnly? SaleDate { get; set; }
-  
+
+        public string? Description { get; set; }
         public bool IsAvailable { get; set; }
 
     }

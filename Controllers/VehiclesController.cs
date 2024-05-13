@@ -62,13 +62,13 @@ namespace OC_Express_Voitures.Controllers
         }
 
         // AssessAvailability (bool isAvailable, date|null saledate)
-        private bool ToggleAccessibility(Operation operation)
-        {
-            if(operation.SaleDate != null) return false;
+        //private bool ToggleAccessibility(Operation operation)
+        //{
+        //    if(operation.SaleDate != null) return false;
 
-            return !operation.IsAvailable;
+        //    return !operation.IsAvailable;
 
-        }
+        //}
 
         // GET: Vehicles/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -98,6 +98,7 @@ namespace OC_Express_Voitures.Controllers
                 RepairsCount=vehicle.Repairs.Count(),
                 RetailPrice = CalulateRetailPrice(vehicle.Operation, vehicle.Repairs.ToList()),
                 IsAvailable = vehicle.Operation.IsAvailable,
+                Description= vehicle.Description,
             };
 
             return View(vehicleDetailsViewModel);
@@ -123,7 +124,7 @@ namespace OC_Express_Voitures.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,OperationId,Vin,Brand,Model,Finish,Year, PurchasePrice, PurchaseDate")] VehicleCreateViewModel vehicleCreateViewModel)
+        public async Task<IActionResult> Create([Bind("Id,OperationId,Vin,Brand,Model,Finish,Year, PurchasePrice, PurchaseDate, Description")] VehicleCreateViewModel vehicleCreateViewModel)
         {
             if(vehicleCreateViewModel.Year  < 1990)
             {
@@ -144,6 +145,7 @@ namespace OC_Express_Voitures.Controllers
                 Operation = operation,
                 Vin=vehicleCreateViewModel.Vin,
                 Year=vehicleCreateViewModel.Year,
+                Description=vehicleCreateViewModel.Description,
                 };                 
             _context.Add(vehicle);
             _context.Add(operation);
@@ -186,7 +188,9 @@ namespace OC_Express_Voitures.Controllers
                 Finish = vehicle.Finish,
                 Year = vehicle.Year,
                 SaleDate= vehicle.Operation.SaleDate,
-                IsAvailable = vehicle.Operation.SaleDate != null ? false : vehicle.Operation.IsAvailable
+                IsAvailable = vehicle.Operation.SaleDate != null ? false : vehicle.Operation.IsAvailable,
+                Description = vehicle.Description
+               
             //IsAvailable = vehicle.Operation.SaleDate == null,
             };
 
@@ -220,6 +224,7 @@ namespace OC_Express_Voitures.Controllers
                 targetVehicle.Model= vehicleEditViewModel.Model;           
                 targetVehicle.Finish= vehicleEditViewModel.Finish;   
                 targetVehicle.Year= vehicleEditViewModel.Year;
+                targetVehicle.Description= vehicleEditViewModel.Description;
                 targetVehicle.Operation.SaleDate=vehicleEditViewModel.SaleDate;
                 targetVehicle.Operation.IsAvailable= vehicleEditViewModel.SaleDate != null?false:vehicleEditViewModel.IsAvailable;
                // targetVehicle.Operation.IsAvailable = vehicleEditViewModel.IsAvailable;

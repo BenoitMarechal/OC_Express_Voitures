@@ -13,7 +13,8 @@ namespace OC_Express_Voitures.Models
         public double PurchasePrice { get; set; }
         public DateOnly PurchaseDate { get; set; }
         public DateOnly? SaleDate { get; set; }
+        public string? Description { get; set; }
 
-       
+
     }
 }
