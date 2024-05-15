@@ -1,4 +1,8 @@
-﻿@model IEnumerable<OC_Express_Voitures.Models.VehicleIndexViewModel>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@model IEnumerable<OC_Express_Voitures.Models.VehicleIndexViewModel>
+
 
 @{
     ViewData["Title"] = "Index";
@@ -8,9 +12,11 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
+<form asp-action="Create" asp-controller="Vehicles" method="get">
+    <button type="submit" class="btn btn-primary mt-2">Create new</button>
+</form>
+
 <table class="table">
     <thead>
         <tr>
@@ -49,16 +55,16 @@
 
                 switch (item.Status)
                 {
-                    case "Vendu":
+                    case "Sold":
                         statusClass = statusClass + "secondary";
                     break;
 
-                    case "Bientôt disponible":
-                        statusClass = statusClass + "primary";
+                    case "Available soon":
+                        statusClass = statusClass + "dark ";
                     break;
 
                     default:
-                         statusClass = statusClass + "dark text-bold";
+                    statusClass = statusClass + "primary text-bold";
                         break;
                 }
             
@@ -85,11 +91,20 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Status)
                     </td>
-                    <td >
+                    
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <td >                   
                         <a asp-action="Edit" asp-route-id="@item.Id" class="@statusClass">Edit</a> |
                         <a asp-action="Details" asp-route-id="@item.Id" class="@statusClass">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="@statusClass">Delete</a>
-                    </td>               
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="@statusClass">Delete</a>                        
+                    </td>  
+                }
+                else{
+                    <td>
+                <a asp-action="Details" asp-route-id="@item.Id" class="@statusClass">Details</a>
+                    </td>
+                }
                 </tr>
         }
     </tbody>

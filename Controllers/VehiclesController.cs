@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OC_Express_Voitures.Data;
 using OC_Express_Voitures.Models;
+using OC_Express_Voitures.Utils;
 
 namespace OC_Express_Voitures.Controllers
 {
@@ -42,7 +43,7 @@ namespace OC_Express_Voitures.Controllers
                     Year = vehicle.Year,
                     RetailPrice = CalulateRetailPrice(vehicle.Operation, vehicle.Repairs.ToList()),
                     IsAvailable = vehicle.Operation.IsAvailable,
-                    Status = vehicle.Operation.ReturnStatus()
+                    Status = StatusHelper.ReturnStatus(vehicle.Operation),
 
                 });                
             }
@@ -60,15 +61,7 @@ namespace OC_Express_Voitures.Controllers
             price += FixMargin;
             return price;        
         }
-
-        // AssessAvailability (bool isAvailable, date|null saledate)
-        //private bool ToggleAccessibility(Operation operation)
-        //{
-        //    if(operation.SaleDate != null) return false;
-
-        //    return !operation.IsAvailable;
-
-        //}
+  
 
         // GET: Vehicles/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -187,9 +180,12 @@ namespace OC_Express_Voitures.Controllers
                 Model = vehicle.Model,
                 Finish = vehicle.Finish,
                 Year = vehicle.Year,
+                PurchaseDate=vehicle.Operation.PurchaseDate,
+                PurchasePrice=vehicle.Operation.PurchasePrice,
                 SaleDate= vehicle.Operation.SaleDate,
                 IsAvailable = vehicle.Operation.SaleDate != null ? false : vehicle.Operation.IsAvailable,
                 Description = vehicle.Description
+
                
             //IsAvailable = vehicle.Operation.SaleDate == null,
             };
@@ -204,7 +200,7 @@ namespace OC_Express_Voitures.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Vin,Brand,Model,Finish,Year, SaleDate, IsAvailable")] VehicleEditViewModel vehicleEditViewModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Vin,Brand,Model,Finish,Year,PurchaseDate,PurchasePrice, SaleDate, IsAvailable, Description")] VehicleEditViewModel vehicleEditViewModel)
         {
             if (id != vehicleEditViewModel.Id)
             {
@@ -218,7 +214,6 @@ namespace OC_Express_Voitures.Controllers
             .Include(v => v.Operation)
             .Include(v => v.Repairs)
             .FirstOrDefaultAsync(m => m.Id == id);
-
                 targetVehicle.Vin= vehicleEditViewModel.Vin;
                 targetVehicle.Brand= vehicleEditViewModel.Brand;                
                 targetVehicle.Model= vehicleEditViewModel.Model;           
@@ -227,7 +222,9 @@ namespace OC_Express_Voitures.Controllers
                 targetVehicle.Description= vehicleEditViewModel.Description;
                 targetVehicle.Operation.SaleDate=vehicleEditViewModel.SaleDate;
                 targetVehicle.Operation.IsAvailable= vehicleEditViewModel.SaleDate != null?false:vehicleEditViewModel.IsAvailable;
-               // targetVehicle.Operation.IsAvailable = vehicleEditViewModel.IsAvailable;
+                targetVehicle.Operation.PurchaseDate=vehicleEditViewModel.PurchaseDate;
+                targetVehicle.Operation.PurchasePrice=vehicleEditViewModel.PurchasePrice;
+      
                 try
                 {
                     _context.Update(targetVehicle);

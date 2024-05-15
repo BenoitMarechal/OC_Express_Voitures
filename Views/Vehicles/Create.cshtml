@@ -1,4 +1,7 @@
-﻿@model OC_Express_Voitures.Models.VehicleCreateViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@model OC_Express_Voitures.Models.VehicleCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -8,62 +11,71 @@
 
 <h4>Vehicle</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Vin" class="control-label"></label>
-                <input asp-for="Vin" class="form-control" />
-                <span asp-validation-for="Vin" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Brand" class="control-label"></label>
-                <input asp-for="Brand" class="form-control"     />
-                <span asp-validation-for="Brand" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Model" class="control-label"></label>
-                <input asp-for="Model" class="form-control" />
-                <span asp-validation-for="Model" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Finish" class="control-label"></label>
-                <input asp-for="Finish" class="form-control" />
-                <span asp-validation-for="Finish" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Year" class="control-label"></label>
-                 <select asp-for="Year" asp-items=@ViewBag.Years></select> 
-                <span asp-validation-for="Year" class="text-danger"></span>
-            </div> 
-            
-            <div class="form-group">
-                <label asp-for="PurchasePrice" class="control-label"></label>
-                <input asp-for="PurchasePrice" class="form-control" />
-                <span asp-validation-for="PurchasePrice" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="PurchaseDate" class="control-label"></label>
-                <input asp-for="PurchaseDate" class="form-control" type="date" value=@DateTime.Today.Date.ToString("yyyy-MM-dd")/>
-                <span asp-validation-for="PurchaseDate" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Description..."></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
 
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Vin" class="control-label"></label>
+                    <input asp-for="Vin" class="form-control" />
+                    <span asp-validation-for="Vin" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Brand" class="control-label"></label>
+                    <input asp-for="Brand" class="form-control" />
+                    <span asp-validation-for="Brand" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Model" class="control-label"></label>
+                    <input asp-for="Model" class="form-control" />
+                    <span asp-validation-for="Model" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Finish" class="control-label"></label>
+                    <input asp-for="Finish" class="form-control" />
+                    <span asp-validation-for="Finish" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Year" class="control-label"></label>
+                    <select asp-for="Year" asp-items=@ViewBag.Years></select>
+                    <span asp-validation-for="Year" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PurchasePrice" class="control-label"></label>
+                    <input asp-for="PurchasePrice" class="form-control" />
+                    <span asp-validation-for="PurchasePrice" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PurchaseDate" class="control-label"></label>
+                    <input asp-for="PurchaseDate" class="form-control" type="date" value=@DateTime.Today.Date.ToString("yyyy-MM-dd") />
+                    <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="4" placeholder="Description..."></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+}
+else
+{   
 
+    <p>Sorry, you are not allowed to access this page</p>
+}
 <div>
     <a asp-action="Index">Back to List</a>
 </div>

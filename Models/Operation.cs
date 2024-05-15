@@ -21,20 +21,7 @@ namespace OC_Express_Voitures.Models
         [ForeignKey(nameof(VehicleId))]
         public virtual Vehicle Vehicle { get; set; }
 
-        public string ReturnStatus()
-        {
-            if(SaleDate != null)
-            {
-                IsAvailable = false;
-                return "Vendu";
-            }
-            if (IsAvailable == false)
-            {
-                return "Bientôt disponible";
-            }
-
-            return "En stock";
-        }
+     
 
 
 
