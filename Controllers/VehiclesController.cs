@@ -44,6 +44,8 @@ namespace OC_Express_Voitures.Controllers
                     RetailPrice = CalulateRetailPrice(vehicle.Operation, vehicle.Repairs.ToList()),
                     IsAvailable = vehicle.Operation.IsAvailable,
                     Status = StatusHelper.ReturnStatus(vehicle.Operation),
+                    Photo=vehicle.Photo,
+                   
 
                 });                
             }
@@ -61,6 +63,10 @@ namespace OC_Express_Voitures.Controllers
             price += FixMargin;
             return price;        
         }
+
+       // public Photo AddPhoto(string FilePath)
+
+
   
 
         // GET: Vehicles/Details/5
@@ -74,6 +80,7 @@ namespace OC_Express_Voitures.Controllers
             var vehicle = await _context.Vehicle
                 .Include (v => v.Operation)
                 .Include(v => v.Repairs)
+                .Include(v => v.Photo)
                 .FirstOrDefaultAsync(m => m.Id == id)
                 ;
             if (vehicle == null)
@@ -92,6 +99,8 @@ namespace OC_Express_Voitures.Controllers
                 RetailPrice = CalulateRetailPrice(vehicle.Operation, vehicle.Repairs.ToList()),
                 IsAvailable = vehicle.Operation.IsAvailable,
                 Description= vehicle.Description,
+                Photo= vehicle.Photo,
+               
             };
 
             return View(vehicleDetailsViewModel);
@@ -184,7 +193,8 @@ namespace OC_Express_Voitures.Controllers
                 PurchasePrice=vehicle.Operation.PurchasePrice,
                 SaleDate= vehicle.Operation.SaleDate,
                 IsAvailable = vehicle.Operation.SaleDate != null ? false : vehicle.Operation.IsAvailable,
-                Description = vehicle.Description
+                Description = vehicle.Description,
+                Photo=vehicle.Photo,
 
                
             //IsAvailable = vehicle.Operation.SaleDate == null,

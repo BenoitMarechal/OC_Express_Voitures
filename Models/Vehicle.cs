@@ -14,6 +14,8 @@ namespace OC_Express_Voitures.Models
 
         public  ICollection<Repair>? Repairs{ get; set; }       
        public virtual required Operation Operation { get; set; }
+        public Photo? Photo { get; set; }
+
 
     }
 }

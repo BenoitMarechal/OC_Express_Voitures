@@ -14,6 +14,7 @@ namespace OC_Express_Voitures.Data
        public DbSet<OC_Express_Voitures.Models.Repair> Repair { get; set; } = default!;
         public DbSet<OC_Express_Voitures.Models.Vehicle> Vehicle { get; set; } = default!;
         public DbSet<OC_Express_Voitures.Models.Operation> Operation { get; set; } = default!;
+        public DbSet<OC_Express_Voitures.Models.Photo> Photo { get; set; } = default!;
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -41,6 +42,12 @@ namespace OC_Express_Voitures.Data
                 .WithOne(v => v.Operation)
                 .HasForeignKey<Operation>(o => o.VehicleId)
                 .IsRequired();
+
+            modelBuilder.Entity<Photo>()
+           .HasOne(p => p.Vehicle)
+           .WithOne(v => v.Photo)
+           .HasForeignKey<Photo>(p => p.VehicleId);
+           
 
 
 

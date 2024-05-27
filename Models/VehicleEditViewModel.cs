@@ -17,6 +17,7 @@ namespace OC_Express_Voitures.Models
         public double PurchasePrice { get; set; }
         public string? Description { get; set; }
         public bool IsAvailable { get; set; }
+        public Photo? Photo { get; set; }    
 
     }
 }

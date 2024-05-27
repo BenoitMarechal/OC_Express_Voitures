@@ -64,20 +64,15 @@ namespace OC_Express_Voitures.Controllers
             ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Vin");
                 return View();
             }
-
-
             // Disable the select menu and preselect the correct VehicleId
             var vehicle = await _context.Vehicle.FindAsync(id);
             if (vehicle == null)
                 {
                 return NotFound($"Vehicle with ID {id} not found.");
             }
-
             ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Vin", id);
             ViewData["Disabled"] = "disabled";
-             return View();
-           
-
+             return View();  
         }
 
         // POST: Repairs/Create

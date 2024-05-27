@@ -15,5 +15,7 @@ namespace OC_Express_Voitures.Models
         public double RetailPrice { get; set; }
         public string Status {  get; set; }
 
+        public Photo? Photo { get; set; }   
+
     }
 }

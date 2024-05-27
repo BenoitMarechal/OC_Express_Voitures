@@ -74,6 +74,17 @@
             }
         </dd>
 
+
+
+        @if (Model.Photo != null)
+        {
+             <img src="@Url.Action("GetPhoto", "Photos", new { id = Model.Photo.Id })" alt="Vehicle Photo" style="max-width: 450px; height: auto;" />
+        }
+        else
+        {
+            <p>Pas de photo</p>
+        }
+
     </dl>
 </div>
 <div>   
