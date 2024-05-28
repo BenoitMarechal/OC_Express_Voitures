@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -107,6 +108,7 @@ namespace OC_Express_Voitures.Controllers
         }
 
         // GET: Vehicles/Create
+        [Authorize]
         public IActionResult Create()
         {
             var currentYear = DateTime.Now.Year;
@@ -125,6 +127,7 @@ namespace OC_Express_Voitures.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,OperationId,Vin,Brand,Model,Finish,Year, PurchasePrice, PurchaseDate, Description")] VehicleCreateViewModel vehicleCreateViewModel)
         {
@@ -161,6 +164,7 @@ namespace OC_Express_Voitures.Controllers
 
 
         // GET: Vehicles/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -172,6 +176,7 @@ namespace OC_Express_Voitures.Controllers
             var vehicle = await _context.Vehicle
              .Include(v => v.Operation)
              .Include(v => v.Repairs)
+             .Include(v => v.Photo)
              .FirstOrDefaultAsync(m => m.Id == id)
              ;
 
@@ -209,6 +214,7 @@ namespace OC_Express_Voitures.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Vin,Brand,Model,Finish,Year,PurchaseDate,PurchasePrice, SaleDate, IsAvailable, Description")] VehicleEditViewModel vehicleEditViewModel)
         {
@@ -259,6 +265,7 @@ namespace OC_Express_Voitures.Controllers
         }
 
         // GET: Vehicles/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -277,6 +284,7 @@ namespace OC_Express_Voitures.Controllers
         }
 
         // POST: Vehicles/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
