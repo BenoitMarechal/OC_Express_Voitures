@@ -30,10 +30,12 @@ namespace OC_Express_Voitures.Controllers
         .Include(v => v.Operation)  
         .Include(v => v.Repairs)     
         .ToListAsync();
-            var operations = await _context.Operation.Include(v => v.Vehicle).ToListAsync();
+           // var operations = await _context.Operation.Include(v => v.Vehicle).ToListAsync();
+
             var vehicleIndexViewModels = new List<VehicleIndexViewModel>();
+
             foreach(var vehicle in vehicles)
-            {
+            {   
                 vehicleIndexViewModels.Add(new VehicleIndexViewModel()
                 {
                     Id = vehicle.Id,
@@ -42,18 +44,18 @@ namespace OC_Express_Voitures.Controllers
                     Model = vehicle.Model,
                     Finish = vehicle.Finish,
                     Year = vehicle.Year,
+                    //RetailPrice =vehicle.Operation.SellingPrice,
                     RetailPrice = CalulateRetailPrice(vehicle.Operation, vehicle.Repairs.ToList()),
-                    IsAvailable = vehicle.Operation.IsAvailable,
+                   // IsAvailable = vehicle.Operation.IsAvailable,
+                    IsAvailable = vehicle.Operation.SaleDate != null ? false : vehicle.Operation.IsAvailable,
                     Status = StatusHelper.ReturnStatus(vehicle.Operation),
                     Photo=vehicle.Photo,
-                   
-
                 });                
             }
             return View(vehicleIndexViewModels);
         }
 
-        private double CalulateRetailPrice(Operation operation, List <Repair >repairs)
+        public static double CalulateRetailPrice(Operation operation, List <Repair >repairs)
         {
             double price = 0;
             foreach(Repair repair in repairs)
@@ -64,11 +66,6 @@ namespace OC_Express_Voitures.Controllers
             price += FixMargin;
             return price;        
         }
-
-       // public Photo AddPhoto(string FilePath)
-
-
-  
 
         // GET: Vehicles/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -112,7 +109,7 @@ namespace OC_Express_Voitures.Controllers
         public IActionResult Create()
         {
             var currentYear = DateTime.Now.Year;
-            var minYear = 1990;
+            var minYear = Constants.OldestYear;
             var allowedYears = new List<int?>();
             allowedYears.Add(null);
             for (int year = currentYear; year >= minYear; year--)
@@ -131,9 +128,9 @@ namespace OC_Express_Voitures.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,OperationId,Vin,Brand,Model,Finish,Year, PurchasePrice, PurchaseDate, Description")] VehicleCreateViewModel vehicleCreateViewModel)
         {
-            if(vehicleCreateViewModel.Year  < 1990)
+            if(vehicleCreateViewModel.Year  < Constants.OldestYear)
             {
-                ModelState.AddModelError(nameof(vehicleCreateViewModel.Year), "Cars before 1990 will not be accepted");
+                ModelState.AddModelError(nameof(vehicleCreateViewModel.Year), $"Cars before {Constants.OldestYear} will not be accepted");
             }
             if (ModelState.IsValid)
             {
@@ -170,21 +167,27 @@ namespace OC_Express_Voitures.Controllers
             if (id == null)
             {
                 return NotFound();
-            }        
-
-
+            }  
             var vehicle = await _context.Vehicle
              .Include(v => v.Operation)
              .Include(v => v.Repairs)
              .Include(v => v.Photo)
              .FirstOrDefaultAsync(m => m.Id == id)
              ;
+            var currentYear = DateTime.Now.Year;
+            var minYear = Constants.OldestYear;
+            var allowedYears = new List<int?>();
+            allowedYears.Add(null);
+            for (int year = currentYear; year >= minYear; year--)
+            {
+                allowedYears.Add(year);
+            }
+            ViewData["Years"] = new SelectList(allowedYears);
 
             if (vehicle == null)
             {
                 return NotFound();
             }
-
             //Create viewModel
             var vehicleEditViewModel = new VehicleEditViewModel
             {
@@ -200,9 +203,8 @@ namespace OC_Express_Voitures.Controllers
                 IsAvailable = vehicle.Operation.SaleDate != null ? false : vehicle.Operation.IsAvailable,
                 Description = vehicle.Description,
                 Photo=vehicle.Photo,
-
-               
-            //IsAvailable = vehicle.Operation.SaleDate == null,
+                RepairsCount=vehicle.Repairs.Count(),
+                RetailPrice = CalulateRetailPrice(vehicle.Operation, vehicle.Repairs.ToList()),
             };
 
 
@@ -240,10 +242,14 @@ namespace OC_Express_Voitures.Controllers
                 targetVehicle.Operation.IsAvailable= vehicleEditViewModel.SaleDate != null?false:vehicleEditViewModel.IsAvailable;
                 targetVehicle.Operation.PurchaseDate=vehicleEditViewModel.PurchaseDate;
                 targetVehicle.Operation.PurchasePrice=vehicleEditViewModel.PurchasePrice;
-      
+
+                var targetOperation = targetVehicle.Operation;
+     
+
                 try
                 {
                     _context.Update(targetVehicle);
+                    _context.Update(targetOperation);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

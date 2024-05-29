@@ -1,17 +1,15 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
-@model IEnumerable<OC_Express_Voitures.Models.VehicleIndexViewModel>
+@model IEnumerable<VehicleIndexViewModel>
 
 
 @{
     ViewData["Title"] = "Index";
+    bool isLoggedIn = (SignInManager.IsSignedIn(User));
 }
 
-@{
-    string hideIfNotLoggedClass = (SignInManager.IsSignedIn(User)) ? "logged" : "d-none";
-  //  class="@hideIfNotLoggedClass"
-}
+
 
 
 
@@ -19,9 +17,13 @@
 <h1>Index</h1>
 
 
-<form asp-action="Create" asp-controller="Vehicles" method="get" class=@hideIfNotLoggedClass>
+@if (isLoggedIn)
+{
+    
+<form asp-action="Create" asp-controller="Vehicles" method="get" >
     <button type="submit" class="btn btn-primary mt-2">Create new</button>
 </form>
+}
 
 <table class="table">
     <thead>
@@ -99,12 +101,22 @@
                     </td>                   
           
                     <td >
-                        <span></span>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="@statusClass + @hideIfNotLoggedClass">Edit</a>
-                    <span class=" @hideIfNotLoggedClass">|</span>
+                    
+                    @if (isLoggedIn)
+                    {
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="@statusClass ">Edit</a>
+                    <span >|</span>
+                        
+                    }
                         <a asp-action="Details" asp-route-id="@item.Id" class="@statusClass ">Details</a>
-                    <span class=" @hideIfNotLoggedClass">|</span>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="@statusClass + @hideIfNotLoggedClass">Delete</a>
+
+
+                    @if (isLoggedIn)
+                    {
+                    <span >|</span>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="@statusClass ">Delete</a>
+
+                    }
                     </td>             
                 </tr>
         }

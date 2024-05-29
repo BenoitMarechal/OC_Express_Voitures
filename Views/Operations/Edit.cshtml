@@ -1,4 +1,4 @@
-﻿@model OC_Express_Voitures.Models.Operation
+﻿@model OC_Express_Voitures.Models.OperationEditViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -28,6 +28,19 @@
                 <input asp-for="SellingPrice" class="form-control" />
                 <span asp-validation-for="SellingPrice" class="text-danger"></span>
             </div>
+
+            @if (Model.SaleDate == null)
+            {
+                
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsAvailable" /> @Html.DisplayNameFor(model => model.IsAvailable)
+                </label>
+            </div>
+            }
+
+
+
             <div class="form-group">
                 <label asp-for="PurchaseDate" class="control-label"></label>
                 <input asp-for="PurchaseDate" class="form-control" />

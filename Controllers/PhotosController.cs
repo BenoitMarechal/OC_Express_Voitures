@@ -11,7 +11,7 @@ using OC_Express_Voitures.Models;
 
 namespace OC_Express_Voitures.Controllers
 {
-   // [Authorize]
+   
     public class PhotosController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -72,7 +72,7 @@ namespace OC_Express_Voitures.Controllers
         }
 
         // GET: Photos
-        [Authorize]
+        
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Photo.Include(p => p.Vehicle);
@@ -151,60 +151,60 @@ namespace OC_Express_Voitures.Controllers
             return View(photo);
         }
 
-        // GET: Photos/Edit/5
-        [Authorize]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //// GET: Photos/Edit/5
+        //[Authorize]
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var photo = await _context.Photo.FindAsync(id);
-            if (photo == null)
-            {
-                return NotFound();
-            }
-            ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Id", photo.VehicleId);
-            return View(photo);
-        }
+        //    var photo = await _context.Photo.FindAsync(id);
+        //    if (photo == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Id", photo.VehicleId);
+        //    return View(photo);
+        //}
 
-        // POST: Photos/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,VehicleId,ImageData,ImageFileName")] Photo photo)
-        {
-            if (id != photo.Id)
-            {
-                return NotFound();
-            }
+        //// POST: Photos/Edit/5
+        //// To protect from overposting attacks, enable the specific properties you want to bind to.
+        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Authorize]
+        //public async Task<IActionResult> Edit(int id, [Bind("Id,VehicleId,ImageData,ImageFileName")] Photo photo)
+        //{
+        //    if (id != photo.Id)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(photo);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PhotoExists(photo.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Id", photo.VehicleId);
-            return View(photo);
-        }
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(photo);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!PhotoExists(photo.Id))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Id", photo.VehicleId);
+        //    return View(photo);
+        //}
 
         // GET: Photos/Delete/5
         [Authorize]

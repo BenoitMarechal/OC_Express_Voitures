@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using OC_Express_Voitures.Utils;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OC_Express_Voitures.Models
 {
@@ -9,9 +10,13 @@ namespace OC_Express_Voitures.Models
         public string Brand { get; set; }
         public string Model { get; set; }
         public string Finish { get; set; }
+
+        [CustomYearRange]
         public int Year { get; set; }
         public double PurchasePrice { get; set; }
+        [CustomDateRange]
         public DateOnly PurchaseDate { get; set; }
+        [CustomDateRange]
         public DateOnly? SaleDate { get; set; }
         public string? Description { get; set; }
 

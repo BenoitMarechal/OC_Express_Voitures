@@ -53,7 +53,8 @@
 
                 <div class="form-group">
                     <label asp-for="PurchaseDate" class="control-label"></label>
-                    <input asp-for="PurchaseDate" class="form-control" type="date" value=@DateTime.Today.Date.ToString("yyyy-MM-dd") />
+                    <input asp-for="PurchaseDate" class="form-control" type="date" value=@DateTime.Today.Date.ToString("yyyy-MM-dd") max=@DateTime.Today.Date.ToString("yyyy-MM-dd") min="1990-01-01"/>
+
                     <span asp-validation-for="PurchaseDate" class="text-danger"></span>
                 </div>
 

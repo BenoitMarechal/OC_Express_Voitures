@@ -11,7 +11,7 @@ using OC_Express_Voitures.Models;
 
 namespace OC_Express_Voitures.Controllers
 {
-    [Authorize]
+    
     public class RepairsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -58,6 +58,7 @@ namespace OC_Express_Voitures.Controllers
         }
 
         // GET: Repairs/Create
+        [Authorize]
         public async Task<IActionResult> Create(int? id)
         {
            if (id == null)
@@ -82,6 +83,7 @@ namespace OC_Express_Voitures.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,Title,Cost,Date,VehicleId")] Repair repair)
         {
             
@@ -99,6 +101,7 @@ namespace OC_Express_Voitures.Controllers
         }
 
         // GET: Repairs/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -120,6 +123,7 @@ namespace OC_Express_Voitures.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Cost,Date,VehicleId")] Repair repair)
         {
             if (id != repair.Id)
@@ -152,6 +156,7 @@ namespace OC_Express_Voitures.Controllers
         }
 
         // GET: Repairs/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -173,6 +178,7 @@ namespace OC_Express_Voitures.Controllers
         // POST: Repairs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var repair = await _context.Repair.FindAsync(id);

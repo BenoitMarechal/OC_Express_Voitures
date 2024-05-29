@@ -1,14 +1,26 @@
 ﻿@model IEnumerable<OC_Express_Voitures.Models.Repair>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
 
 @{
+    bool isLoggedIn = (SignInManager.IsSignedIn(User));
     ViewData["Title"] = "Index";
 }
 
+
+
 <h1>Réparations</h1>
 
-<p>
-    <a asp-action="Create" >Create New</a>
-</p>
+@if (isLoggedIn)
+{
+
+    <form asp-action="Create" asp-controller="Repairs" method="get">
+        <button type="submit" class="btn btn-primary mt-2">Create new</button>
+    </form>
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -28,27 +40,40 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cost)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Vehicle.Vin)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>|
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cost)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Vehicle.Vin)
+                </td>
+                <td>
+                    @if (isLoggedIn)
+                    {
+                        <span>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        </span>
+                    }
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-controller="Vehicles" asp-action="Details" asp-route-id="@item.VehicleId">See Vehicle</a>
-            </td>
-        </tr>
-}
+
+                    @if (isLoggedIn)
+                    {
+                        <span>
+                            | <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                        </span>
+
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

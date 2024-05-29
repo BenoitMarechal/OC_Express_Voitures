@@ -19,6 +19,9 @@
                 @Html.DisplayNameFor(model => model.SellingPrice)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.IsAvailable)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.PurchaseDate)
             </th>
             <th>
@@ -40,19 +43,21 @@
                 @Html.DisplayFor(modelItem => item.SellingPrice)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.IsAvailable)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.PurchaseDate)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SaleDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Vehicle.Vin)
+                @Html.DisplayFor(modelItem => item.Vehicle.Id)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                <a asp-controller="Vehicles" asp-action="Details" asp-route-id="@item.Vehicle.Id">See Vehicle</a>
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }
