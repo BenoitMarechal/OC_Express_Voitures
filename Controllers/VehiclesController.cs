@@ -55,7 +55,7 @@ namespace OC_Express_Voitures.Controllers
             return View(vehicleIndexViewModels);
         }
 
-        public static double CalulateRetailPrice(Operation operation, List <Repair >repairs)
+        private double CalulateRetailPrice(Operation operation, List <Repair> repairs)
         {
             double price = 0;
             foreach(Repair repair in repairs)
@@ -97,8 +97,7 @@ namespace OC_Express_Voitures.Controllers
                 RetailPrice = CalulateRetailPrice(vehicle.Operation, vehicle.Repairs.ToList()),
                 IsAvailable = vehicle.Operation.IsAvailable,
                 Description= vehicle.Description,
-                Photo= vehicle.Photo,
-               
+                Photo= vehicle.Photo,               
             };
 
             return View(vehicleDetailsViewModel);
@@ -117,6 +116,9 @@ namespace OC_Express_Voitures.Controllers
                 allowedYears.Add(year);
             }
             ViewData["Years"] = new SelectList(allowedYears);
+            ViewData["Brands"] = new SelectList(Constants.Brands);
+            ViewData["Models"] = new SelectList(Constants.Models);
+            ViewData["Finishes"] = new SelectList(Constants.Finishes);
             return View();
         }
         
@@ -183,6 +185,9 @@ namespace OC_Express_Voitures.Controllers
                 allowedYears.Add(year);
             }
             ViewData["Years"] = new SelectList(allowedYears);
+            ViewData["Brands"] = new SelectList(Constants.Brands);
+            ViewData["Models"] = new SelectList(Constants.Models);
+            ViewData["Finishes"] = new SelectList(Constants.Finishes);
 
             if (vehicle == null)
             {

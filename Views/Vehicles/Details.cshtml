@@ -104,10 +104,14 @@
 
     
     }
+    @if (Model.RepairsCount != 0)
+    {
     <form asp-action="Index" asp-controller="Repairs" method="get">
         <input type="hidden" name="id" value="@Model?.Id" />
         <button type="submit" class="btn btn-primary mt-2">See repairs for this vehicle</button>
     </form>
+        
+    }
 
     <div>
         <form asp-action="Index" asp-controller="Vehicles" method="get">

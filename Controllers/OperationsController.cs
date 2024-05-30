@@ -9,10 +9,12 @@ using Microsoft.EntityFrameworkCore;
 using OC_Express_Voitures.Data;
 using OC_Express_Voitures.Migrations;
 using OC_Express_Voitures.Models;
+using OC_Express_Voitures.Utils;
 
 namespace OC_Express_Voitures.Controllers
 {
-    
+
+        [Authorize]
     public class OperationsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -23,13 +25,28 @@ namespace OC_Express_Voitures.Controllers
         }
 
         // GET: Operations
+        
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Operation.Include(o => o.Vehicle);
-            return View(await applicationDbContext.ToListAsync());
+            // var applicationDbContext = _context.Operation.Include(o => o.Vehicle);
+
+            var operations = await _context.Operation.Include(o => o.Vehicle).Include(o => o.Vehicle.Repairs).ToListAsync();
+
+            foreach (var operation in operations)
+            {
+                var repairs = operation.Vehicle.Repairs.ToList();
+                operation.SellingPrice = RetailPriceCalculator.CalculateRetailPrice(operation, repairs);
+            }
+
+
+
+
+            // return View(await applicationDbContext.ToListAsync());
+            return View(operations);
         }
 
         // GET: Operations/Details/5
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -39,43 +56,24 @@ namespace OC_Express_Voitures.Controllers
 
             var operation = await _context.Operation
                 .Include(o => o.Vehicle)
+                .Include(o => o.Vehicle.Repairs)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            var repairs = operation.Vehicle.Repairs.ToList();
             if (operation == null)
             {
                 return NotFound();
             }
+            operation.SellingPrice=RetailPriceCalculator.CalculateRetailPrice(operation, repairs);
+
 
             return View(operation);
         }
 
-        // GET: Operations/Create
-        [Authorize]
-        public IActionResult Create()
-        {
-            ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Id");
-            return View();
-        }
-
-        // POST: Operations/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,VehicleId,PurchasePrice,SellingPrice,PurchaseDate,SaleDate")] Operation operation)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(operation);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Id", operation.VehicleId);
-            return View(operation);
-        }
+      
 
         // GET: Operations/Edit/5
-        [Authorize]
+        
         public async Task<IActionResult> Edit(int id)
         {
             if (id == null)
@@ -85,7 +83,13 @@ namespace OC_Express_Voitures.Controllers
 
             var operation = await _context.Operation
                 .Include(o => o.Vehicle)
+                .Include(o => o.Vehicle.Repairs)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+
+            // var vehicle = operation.Vehicle;
+            var repairs = operation.Vehicle.Repairs.ToList();
+
 
             if (operation == null)
             {
@@ -94,13 +98,14 @@ namespace OC_Express_Voitures.Controllers
 
             var operationEditViewModel = new OperationEditViewModel
             {
-                SellingPrice = operation.SellingPrice,
+                SellingPrice = RetailPriceCalculator.CalculateRetailPrice(operation, repairs),
                 Id = operation.Id,
                 IsAvailable = operation.IsAvailable,
                 PurchaseDate = operation.PurchaseDate,
                 PurchasePrice = operation.PurchasePrice,
                 SaleDate = operation.SaleDate,
                 VehicleId = operation.VehicleId,
+
             };
 
             ViewData["VehicleId"] = new SelectList(_context.Vehicle, "Id", "Id", operationEditViewModel.VehicleId);
@@ -112,7 +117,7 @@ namespace OC_Express_Voitures.Controllers
         // POST: Operations/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,VehicleId,PurchasePrice,IsAvailable,SellingPrice,PurchaseDate,SaleDate")] OperationEditViewModel operationEditViewModel)
@@ -121,7 +126,7 @@ namespace OC_Express_Voitures.Controllers
             {
                 return NotFound();
             }
-                                
+
             if (ModelState.IsValid)
             {
                 try
@@ -140,16 +145,16 @@ namespace OC_Express_Voitures.Controllers
                     {
                         return NotFound();
                     }
-                    var vehicle=operation.Vehicle;
+                    var vehicle = operation.Vehicle;
                     operation.PurchasePrice = operationEditViewModel.PurchasePrice;
                     operation.SaleDate = operationEditViewModel.SaleDate;
-                    operation.SellingPrice = operationEditViewModel.SellingPrice;
+                    // operation.SellingPrice = operationEditViewModel.SellingPrice;
                     operation.PurchaseDate = operationEditViewModel.PurchaseDate;
                     operation.PurchasePrice = operationEditViewModel.PurchasePrice;
                     operation.VehicleId = vehicle.Id;
                     operation.Vehicle = vehicle;
                     operation.Id = id;
-                    operation.VehicleId=vehicle.Id;
+                    operation.VehicleId = vehicle.Id;
                     operation.IsAvailable = operationEditViewModel.SaleDate != null ? false : operationEditViewModel.IsAvailable;
 
                     _context.Update(operation);
@@ -173,7 +178,7 @@ namespace OC_Express_Voitures.Controllers
         }
 
         // GET: Operations/Delete/5
-        [Authorize]
+  
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -193,7 +198,7 @@ namespace OC_Express_Voitures.Controllers
         }
 
         // POST: Operations/Delete/5
-        [Authorize]
+        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -205,7 +210,7 @@ namespace OC_Express_Voitures.Controllers
 
             if (operation != null)
             {
-                var vehicle=operation.Vehicle;
+                var vehicle = operation.Vehicle;
                 _context.Operation.Remove(operation);
                 _context.Remove(vehicle);
             }

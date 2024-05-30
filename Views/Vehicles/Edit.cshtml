@@ -15,43 +15,44 @@
 
 <div class="container ">
 
-        <form asp-action="Edit" class=" row  ">
-            <div class="col-md-4  ">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="Id" />
-                <div class="form-group">
-                    <label asp-for="Vin" class="control-label"></label>
-                    <input asp-for="Vin" class="form-control" />
-                    <span asp-validation-for="Vin" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Brand" class="control-label"></label>
-                    <input asp-for="Brand" class="form-control" />
-                    <span asp-validation-for="Brand" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Model" class="control-label"></label>
-                    <input asp-for="Model" class="form-control" />
-                    <span asp-validation-for="Model" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Finish" class="control-label"></label>
-                    <input asp-for="Finish" class="form-control" />
-                    <span asp-validation-for="Finish" class="text-danger"></span>
-                </div>
-          @*       <div class="form-group">
-                    <label asp-for="Year" class="control-label"></label>
-                    <input asp-for="Year" class="form-control" />
-                    <span asp-validation-for="Year" class="text-danger"></span>
-                </div> *@
+    <form asp-action="Edit" class="row">
+        <div class="col-md-4 ">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="Year" class="control-label"></label>
-                <select asp-for="Year" asp-items=@ViewBag.Years></select>
-                <span asp-validation-for="Year" class="text-danger"></span>
+                <label asp-for="Vin" class="control-label"></label>
+                <input asp-for="Vin" class="form-control" />
+                <span asp-validation-for="Vin" class="text-danger"></span>
             </div>
+
+            <div class="form-group my-2">
+                <label asp-for="Brand" class="control-label col-4"></label>
+                <select asp-for="Brand" class=" col-12 p-2" asp-items=@ViewBag.Brands></select>
+                <span asp-validation-for="Brand" class="text-danger"></span>
+            </div>
+
+            <div class="form-group my-2">
+                <label asp-for="Model" class="control-label col-4"></label>
+                <select asp-for="Model" class=" col-12 p-2" asp-items=@ViewBag.Models></select>
+                <span asp-validation-for="Model" class="text-danger"></span>
+            </div>
+
+            <div class="form-group my-2">
+                <label asp-for="Finish" class="control-label col-4"></label>
+                <select asp-for="Finish" class=" col-12 p-2" asp-items=@ViewBag.Finishes></select>
+                <span asp-validation-for="Finish" class="text-danger"></span>
+
+                <div class="form-group my-2">
+                    <label asp-for="Year" class="control-label col-4"></label>
+                    <select asp-for="Year" class=" col-12 p-2" asp-items=@ViewBag.Years></select>
+                    <span asp-validation-for="Year" class="text-danger"></span>
+                </div>
+            </div>
+
+
                 <div class="form-group">
                     <label asp-for="PurchaseDate" class="control-label"></label>
-                <input asp-for="PurchaseDate" class="form-control" type="date" max=@DateTime.Today.Date.ToString("yyyy-MM-dd") min="1990-01-01" />
+                    <input asp-for="PurchaseDate" class="form-control" type="date" max=@DateTime.Today.Date.ToString("yyyy-MM-dd") min="1990-01-01" />
                     <span asp-validation-for="PurchaseDate" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -61,22 +62,22 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="SaleDate" class="control-label"></label>
-                <input asp-for="SaleDate" class="form-control" type="date" max=@DateTime.Today.Date.ToString("yyyy-MM-dd") min="1990-01-01" />
+                    <input asp-for="SaleDate" class="form-control" type="date" max=@DateTime.Today.Date.ToString("yyyy-MM-dd") min="1990-01-01" />
                     <span asp-validation-for="SaleDate" class="text-danger"></span>
                 </div>
 
 
-                @if (@Model == null || Model.SaleDate == null){
+                @if (@Model == null || Model.SaleDate == null)
+                {
                     <div class="form-group">
                         <div class="form-check mt-2">
-                            <input asp-for="IsAvailable" class="form-check-input" type="checkbox" 
-                            />
+                            <input asp-for="IsAvailable" class="form-check-input" type="checkbox" />
                             <label asp-for="IsAvailable" class="form-check-label"></label>
                         </div>
                         <span asp-validation-for="IsAvailable" class="text-danger"></span>
-                    </div>                    
+                    </div>
                 }
-             
+
             </div>
 
             <div class="col-md-4 ">
@@ -88,41 +89,43 @@
                     </div>
                 </div>
             </div>
+
+
             <div class="col-md-4 ">
-                <div class="row" >
-                @if (Model.Photo != null)
-                {
-                    <img src="@Url.Action("GetPhoto", "Photos", new { id = Model.Photo.Id })" alt="Vehicle Photo" style="max-width: 450px; height: auto;" />                   
-                }
-                else
-                {
-                    <span class="fst-italic fw-lighter ">No photo available</span>
-                }
+                <div class="row">
+                    @if (Model.Photo != null)
+                    {
+                        <img src="@Url.Action("GetPhoto", "Photos", new { id = Model.Photo.Id })" alt="Vehicle Photo" style="max-width: 450px; height: auto;" />
+                    }
+                    else
+                    {
+                        <span class="fst-italic fw-lighter ">No photo available</span>
+                    }
                 </div>
-                <div class="text-muted" >
+                <div class="text-muted">
                     <span class="fw-bold">
                         @Html.DisplayNameFor(model => model.RepairsCount) :
                     </span>
-                        @Html.DisplayFor(model => model.RepairsCount)               
+                    @Html.DisplayFor(model => model.RepairsCount)
                 </div>
-            <div class="text-muted">
-                <span class="fw-bold">
-                    @Html.DisplayNameFor(model => model.RetailPrice) :
-                </span>
-                @Html.DisplayFor(model => model.RetailPrice)
+                <div class="text-muted">
+                    <span class="fw-bold">
+                        @Html.DisplayNameFor(model => model.RetailPrice) :
+                    </span>
+                    @Html.DisplayFor(model => model.RetailPrice)
+                </div>
             </div>
-        </div>
-       
+
 
             <div class="form-group mt-4 ">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
 
-
-        </form>
+       
+    </form>
 
     <div class="row ">
-        <div class="col-md-4 ">         
+        <div class="col-md-12 ">
 
             <form asp-action="Index" asp-controller="Repairs" method="get">
                 <input type="hidden" name="id" value="@Model?.Id" />
@@ -142,7 +145,7 @@
         </div>
     </div>
 
-    </div>
+</div>
 
 
 

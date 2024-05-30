@@ -22,46 +22,60 @@
                 <label asp-for="PurchasePrice" class="control-label"></label>
                 <input asp-for="PurchasePrice" class="form-control" />
                 <span asp-validation-for="PurchasePrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SellingPrice" class="control-label"></label>
-                <input asp-for="SellingPrice" class="form-control" />
-                <span asp-validation-for="SellingPrice" class="text-danger"></span>
-            </div>
+            </div>          
 
             @if (Model.SaleDate == null)
             {
-                
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsAvailable" /> @Html.DisplayNameFor(model => model.IsAvailable)
-                </label>
-            </div>
+
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="IsAvailable" /> @Html.DisplayNameFor(model => model.IsAvailable)
+                    </label>
+                </div>
             }
-
-
 
             <div class="form-group">
                 <label asp-for="PurchaseDate" class="control-label"></label>
-                <input asp-for="PurchaseDate" class="form-control" />
+                <input asp-for="PurchaseDate" class="form-control" type="date" max=@DateTime.Today.Date.ToString("yyyy-MM-dd") min="1990-01-01" />
                 <span asp-validation-for="PurchaseDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SaleDate" class="control-label"></label>
-                <input asp-for="SaleDate" class="form-control" />
+                <input asp-for="SaleDate" class="form-control" type="date" max=@DateTime.Today.Date.ToString("yyyy-MM-dd") min="1990-01-01" />
                 <span asp-validation-for="SaleDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
 
-<div>
+
+    <div class="col-md-2 text-muted">
+        <div class="row">
+
+            <dt class="col-sm-6">
+                @Html.DisplayNameFor(model => model.SellingPrice):
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(model => model.SellingPrice)
+            </dd>
+        </div>
+
+
+    </div>
+<div class="mt-2">
     <a asp-action="Index">Back to List</a>
 </div>
 
+
+
+</div>
+</div>
+
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

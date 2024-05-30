@@ -11,7 +11,7 @@ using OC_Express_Voitures.Models;
 
 namespace OC_Express_Voitures.Controllers
 {
-    
+
     public class RepairsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,6 +22,7 @@ namespace OC_Express_Voitures.Controllers
         }
 
         // GET: Repairs 
+       
         public async Task<IActionResult> Index(int? id)
         {
             var applicationDbContext = _context.Repair.Include(r => r.Vehicle);
@@ -29,33 +30,30 @@ namespace OC_Express_Voitures.Controllers
             if (id == null)
             {
                 return View(await applicationDbContext.ToListAsync());
+            } 
+            
+            var vehicle = await _context.Vehicle
+             .Include(v => v.Operation)
+             .Include(v => v.Repairs)
+             .Include(v => v.Photo)
+             .FirstOrDefaultAsync(m => m.Id == id)
+             ;
+            ViewData["IsCurrentVehicleSold"] = true;
+
+            if (vehicle.Operation.SaleDate == null)
+            {
+            ViewData["CurrentVehicleId"] = id;
+            ViewData["CurrentVehicleVin"] = vehicle.Vin;
+               ViewData["IsCurrentVehicleSold"] = false;
             }
+
 
             var result = await applicationDbContext.Where(r => r.VehicleId == id).ToListAsync();
 
             return View(result);
         }
 
-
-
-        // GET: Repairs/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var repair = await _context.Repair
-                .Include(r => r.Vehicle)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (repair == null)
-            {
-                return NotFound();
-            }
-
-            return View(repair);
-        }
+     
 
         // GET: Repairs/Create
         [Authorize]
@@ -124,6 +122,7 @@ namespace OC_Express_Voitures.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
+
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Cost,Date,VehicleId")] Repair repair)
         {
             if (id != repair.Id)
